@@ -17,8 +17,7 @@ public class Fish {
 	private String name;
 	private double price;
 	private Date catchDate;
-//	private String imageFileName;
-	private String photoUrl;
+
 	@OneToMany(mappedBy = "fish", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Photo> photos = new ArrayList<>();
 	
@@ -45,12 +44,6 @@ public class Fish {
 	}
 	public void setCatchDate(Date catchDate) {
 		this.catchDate = catchDate;
-	}
-	public String getPhotoUrl() {
-		return photoUrl;
-	}
-	public void setPhotoUrl(String photoUrl) {
-		this.photoUrl = photoUrl;
 	}
 
 	public List<Photo> getPhotos() {
