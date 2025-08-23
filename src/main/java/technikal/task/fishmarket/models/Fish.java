@@ -1,12 +1,11 @@
 package technikal.task.fishmarket.models;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "fish")
@@ -18,7 +17,10 @@ public class Fish {
 	private String name;
 	private double price;
 	private Date catchDate;
-	private String imageFileName;
+//	private String imageFileName;
+	private String photoUrl;
+	@OneToMany(mappedBy = "fish", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Photo> photos = new ArrayList<>();
 	
 	public int getId() {
 		return id;
@@ -44,11 +46,18 @@ public class Fish {
 	public void setCatchDate(Date catchDate) {
 		this.catchDate = catchDate;
 	}
-	public String getImageFileName() {
-		return imageFileName;
+	public String getPhotoUrl() {
+		return photoUrl;
 	}
-	public void setImageFileName(String imageFileName) {
-		this.imageFileName = imageFileName;
+	public void setPhotoUrl(String photoUrl) {
+		this.photoUrl = photoUrl;
 	}
 
+	public List<Photo> getPhotos() {
+		return photos;
+	}
+
+	public void setPhotos(List<Photo> photos) {
+		this.photos = photos;
+	}
 }

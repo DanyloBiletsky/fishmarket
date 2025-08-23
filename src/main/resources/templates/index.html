@@ -45,11 +45,14 @@
             <td th:text="${fish.id}"></td>
             <td th:text="${fish.name}"></td>
             <td th:text="${fish.price} + '₴'"></td>
-            <td th:text="${fish.catchDate.toString().substring(0,10)}"></td>
+<!--            <td th:text="${fish.catchDate.toString().substring(0,10)}"></td>-->
+            <td th:text="${#temporals.format(fish.catchDate, 'yyyy-MM-dd HH:mm')}"></td>
             <td>
-              <div class="image-container">
-                <img th:src="@{'/images/'+${fish.imageFileName}}" alt="..." width="100">
+              <div class="image-container" th:each="photo : ${fish.photos}">
+<!--                <img th:src="@{'/images/'+${fish.imageFileName}}" alt="..." width="100">-->
+                <img th:src="@{${photo.url}}" alt="Фото рибки" width="100"/>
               </div>
+              <span th:if="${fish.photos.empty}" th:text="'Немає фото'"></span>
             </td>
             <td>
               <a class="btn btn-danger btn-sm" th:href="@{/fish/delete(id=${fish.id})}" onclick="return confirm('Ви впевнені?')">Прибрати</a> 
