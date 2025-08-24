@@ -7,7 +7,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -29,7 +28,7 @@ import jakarta.validation.Valid;
 import technikal.task.fishmarket.models.Fish;
 import technikal.task.fishmarket.models.FishDto;
 import technikal.task.fishmarket.models.Photo;
-import technikal.task.fishmarket.services.FishRepository;
+import technikal.task.fishmarket.repository.FishRepository;
 
 @Controller
 @RequestMapping("/fish")
