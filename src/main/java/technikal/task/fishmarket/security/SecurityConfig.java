@@ -12,6 +12,8 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
@@ -39,22 +41,30 @@ public class SecurityConfig {
 //    }
 
     @Bean
-    public UserDetailsService userDetailsService() {
-        return new UserService();
+    public UserDetailsService userDetailsService(UserService userService) {
+        return userService;
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        return NoOpPasswordEncoder.getInstance();
     }
-
+//    @Bean
+//    public AuthenticationProvider authenticationProvider() {
+//        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+//        provider.setUserDetailsService(userDetailsService());
+//        provider.setPasswordEncoder(passwordEncoder());
+//        return provider;
+//    }
     @Bean
-    public AuthenticationProvider authenticationProvider() {
+    public AuthenticationProvider authenticationProvider(UserDetailsService userDetailsService,
+                                                     PasswordEncoder passwordEncoder) {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(userDetailsService());
-        provider.setPasswordEncoder(passwordEncoder());
+        provider.setUserDetailsService(userDetailsService);
+        provider.setPasswordEncoder(passwordEncoder);
         return provider;
     }
+
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
@@ -62,7 +72,8 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http,
+                                                   AuthenticationProvider authenticationProvider) throws Exception {
        http
                 .authorizeHttpRequests((requests) -> requests
                             .requestMatchers("/fish/create", "/fish/delete/**").hasRole("ADMIN")
@@ -72,7 +83,7 @@ public class SecurityConfig {
                             .requestMatchers("/favicon.ico", "/images/**", "/css/**", "/js/**").permitAll()
                             .anyRequest().authenticated()
                 )
-               .authenticationProvider(authenticationProvider())
+               .authenticationProvider(authenticationProvider)
                .formLogin((form) -> form
                             .loginPage("/login")
                             .permitAll()
