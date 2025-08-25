@@ -43,6 +43,11 @@ public class FishController {
 		model.addAttribute("fishlist", fishlist);
 		return "index";
 	}
+
+	@GetMapping("/login")
+	public String loginPage(){
+		return "fish/login";
+	}
 	
 	@GetMapping("/create")
 	public String showCreatePage(Model model) {

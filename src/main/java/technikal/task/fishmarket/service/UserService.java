@@ -7,6 +7,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import technikal.task.fishmarket.models.User;
 import technikal.task.fishmarket.repository.UserRepository;
+
+import java.util.Collections;
+
 @Service
 public class UserService implements UserDetailsService {
 
@@ -14,10 +17,12 @@ public class UserService implements UserDetailsService {
     private UserRepository userRepository;
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByLogin(username);
-        if(user == null){
-            throw new UsernameNotFoundException("User not found : " + username);
-        }
-        return user;
+        return userRepository.findByUsername(username)
+                .map(user -> new org.springframework.security.core.userdetails.User(
+                        user.getUsername(),
+                        user.getPassword(),
+                        Collections.singleton(user.getRole())
+                ))
+                .orElseThrow(() -> new UsernameNotFoundException("Failed to find user " + username));
     }
 }
